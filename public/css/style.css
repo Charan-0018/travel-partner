@@ -1,0 +1,430 @@
+/* ===== GLOBAL STYLES ===== */
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background: #f3f9fb;
+  margin: 0;
+  color: #333;
+}
+
+
+.greeting {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #0077b6;
+}
+
+.greeting h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.dashboard-title {
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-top: 5px;
+  font-size: 25px;
+  margin-right: 1000px;
+  color: #555;
+}
+
+/* Dashboard cards - base styling */
+.card {
+  flex: 1;
+  min-width: 220px;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  color: white; /* Text white for contrast */
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Specific colors for each card */
+.card.host {
+  background: linear-gradient(135deg, #ff6f61, #ff9770); /* Coral → Peach */
+}
+.card.join {
+  background: linear-gradient(135deg, #0077b6, #0096c7); /* Blue shades */
+}
+.card.requests {
+  background: linear-gradient(135deg, #06d6a0, #1b9aaa); /* Aqua → Teal */
+}
+
+
+/* Hover effect */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+/* Card headings */
+.card h3 {
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+}
+
+h1, h2, h3, h4 {
+  color: #0077b6;
+  font-weight: 600;
+}
+
+a {
+  text-decoration: none;
+  color: #0077b6;
+}
+a:hover {
+  color: #ff6f61;
+}
+
+form {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+input, textarea, select, button {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+input, select, textarea {
+  border: 1px solid #0077b6;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #ff6f61;
+  box-shadow: 0 0 5px #ff6f61;
+  outline: none;
+}
+
+button {
+  background: #ff6f61;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+button:hover {
+  background: #ff8b75;
+}
+
+/* ===== AUTH PAGES ===== */
+.auth-body {
+  background: linear-gradient(rgba(0,119,182,0.4), rgba(0,119,182,0.4)),
+              url('../images/travel-bg.jpg') no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.auth-container {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.auth-card {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 12px;
+  width: 320px;
+  box-shadow: 0 4px 20px rgba(255, 165, 0, 0.4);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+.auth-card:hover {
+  transform: translateY(-5px);
+}
+.auth-card h2 {
+  margin-bottom: 20px;
+}
+
+/* Responsive Auth */
+@media (max-width: 700px) {
+  .auth-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* ===== DASHBOARD ===== */
+.dashboard-container {
+  display: flex;
+  gap: 20px;
+  padding: 30px;
+}
+
+.main-content {
+  flex: 3;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: white;
+  flex: 1;
+  min-width: 220px;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+}
+.card h3 {
+  margin-bottom: 10px;
+}
+
+/* ===== PROFILE PANEL ===== */
+.profile-panel {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.profile-pic {
+  width: 100px;
+  height:100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.edit-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  background: #0096c7;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-top: 10px;
+}
+.edit-btn:hover {
+  background: #0077b6;
+}
+
+/* ===== HOST A TRIP FORM ===== */
+.host-form {
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.host-form h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+.host-form button {
+  width: 100%;
+}
+
+/* ===== JOIN A TRIP ===== */
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.search-bar input, .search-bar select {
+  flex: 1;
+}
+
+.trips-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+  gap: 20px;
+}
+.trip-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.trip-card h4 {
+  margin: 5px 0;
+  color: #0077b6;
+}
+.view-btn {
+  display: block;
+  background: #0096c7;
+  color: white;
+  text-align: center;
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+.view-btn:hover {
+  background: #0077b6;
+}
+
+/* ===== TRIP DETAILS ===== */
+.trip-detail {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+.trip-detail h2 {
+  text-align: center;
+}
+.trip-detail .dates, .trip-detail .budget {
+  font-weight: bold;
+  margin: 5px 0;
+}
+.participants-list {
+  list-style: none;
+  padding: 0;
+}
+.participants-list li {
+  padding: 8px;
+  background: #f9f9f9;
+  margin-bottom: 5px;
+  border-radius: 6px;
+}
+.participants-list li.host {
+  background: #d1f3ff;
+  font-weight: bold;
+}
+
+/* ===== JOIN REQUEST FORM ===== */
+.join-form {
+  margin-top: 20px;
+}
+.join-form textarea {
+  min-height: 80px;
+}
+.join-form button {
+  background: #28a745;
+}
+.join-form button:hover {
+  background: #218838;
+}
+
+/* ===== TRIP REQUEST MANAGEMENT ===== */
+.request-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+}
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.btn-approve {
+  background: #28a745;
+}
+.btn-approve:hover {
+  background: #1e7e34;
+}
+.btn-reject {
+  background: #dc3545;
+}
+.btn-reject:hover {
+  background: #c82333;
+}
+
+/* ===== ALERT MESSAGES ===== */
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+/* Change text color specifically for Join a Trip card */
+.card.join {
+  color: #fff; /* White text for best contrast */
+}
+
+.card.join h3 {
+  color: #fff; /* Ensures heading is also white */
+}
+
+.card.join p {
+  color: #f0f8ff; /* Very light bluish-white for softer body text */
+}
+/* ===== PROFILE PANEL ===== */
+.profile-panel {
+  flex: 1;
+  background: linear-gradient(180deg, #ffffff, #ebf8ff); /* Soft white to very light blue */
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  text-align: center;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.profile-pic {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #0077b6; /* Ocean blue border */
+  margin: 0 auto 20px auto;
+  background-color: #fff;
+}
+
+.profile-panel h3 {
+  color: #0077b6;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.profile-panel p {
+  font-size: 1rem;
+  margin: 8px 0;
+  color: #333;
+}
+
+.profile-panel p b {
+  color: #ff6f61; /* Coral highlight for labels */
+}
+
+.edit-btn {
+  display: inline-block;
+  padding: 12px 16px;
+  background: #ff6f61;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 20px;
+  transition: background 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: #ff8b75;
+}

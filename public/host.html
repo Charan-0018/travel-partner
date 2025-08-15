@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Host a Trip</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="host-form">
+    <h2>Host a Trip</h2>
+    <form action="/host" method="POST" enctype="multipart/form-data">
+      <label>Destination</label>
+      <input type="text" name="destination" placeholder="Where are you going?" required>
+
+      <label>Vehicle</label>
+      <input type="text" name="vehicle" placeholder="Car, Bike, Bus, etc." required>
+
+      <label>Budget (₹)</label>
+      <input type="number" name="budget" placeholder="Total budget" required>
+
+      <label>Start Date</label>
+      <input type="date" name="start_date" required>
+
+      <label>End Date</label>
+      <input type="date" name="end_date" required>
+
+      <label>Preferences</label>
+      <input type="text" name="preferences" placeholder="E.g. Vegetarian food, music, etc.">
+
+      <label>Description</label>
+      <textarea name="description" placeholder="Add trip details..." rows="4"></textarea>
+
+      <label>Trip Image</label>
+      <input type="file" name="image" accept="image/*">
+
+      <button type="submit">Create Trip</button>
+    </form>
+  </div>
+
+</body>
+</html>

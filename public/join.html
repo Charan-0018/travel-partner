@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Join a Trip</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="container" style="max-width: 1100px; margin: auto; padding: 20px;">
+    <h2>Find Your Next Adventure</h2>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="location" placeholder="Destination">
+      <input type="number" id="budget" placeholder="Max Budget (₹)">
+      <input type="text" id="preferences" placeholder="Preferences (optional)">
+      <button id="searchBtn">Search</button>
+    </div>
+
+    <!-- Trip Cards -->
+    <div id="tripsContainer" class="trips-list">
+      <!-- Trip cards will be loaded here -->
+    </div>
+  </div>
+
+  <script>
+    function loadTrips() {
+      const location = document.getElementById('location').value.trim();
+      const budget = document.getElementById('budget').value.trim();
+      let query = `/trips?`;
+      if(location) query += `location=${encodeURIComponent(location)}&`;
+      if(budget) query += `budget=${encodeURIComponent(budget)}&`;
+
+      fetch(query)
+        .then(res => res.json())
+        .then(trips => {
+          const tripsContainer = document.getElementById('tripsContainer');
+          tripsContainer.innerHTML = '';
+
+          if(trips.length === 0) {
+            tripsContainer.innerHTML = '<p>No trips found.</p>';
+            return;
+          }
+
+          trips.forEach(trip => {
+            const startDate = new Date(trip.start_date);
+            const endDate = new Date(trip.end_date);
+            const startFormatted = `${String(startDate.getDate()).padStart(2,'0')}-${String(startDate.getMonth()+1).padStart(2,'0')}-${startDate.getFullYear()}`;
+            const endFormatted = `${String(endDate.getDate()).padStart(2,'0')}-${String(endDate.getMonth()+1).padStart(2,'0')}-${endDate.getFullYear()}`;
+
+            const card = document.createElement('div');
+            card.className = 'trip-card';
+            card.innerHTML = `
+              <h4>${trip.destination}</h4>
+              <p><b>Host:</b> ${trip.username}</p>
+              <p><b>Dates:</b> ${startFormatted} - ${endFormatted}</p>
+              <p><b>Budget:</b> ₹${trip.budget}</p>
+              <a href="trip.html?id=${trip.id}" class="view-btn">View Details</a>
+            `;
+            tripsContainer.appendChild(card);
+          });
+        });
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', loadTrips);
+
+    // Load all trips on page load
+    loadTrips();
+  </script>
+</body>
+</html>

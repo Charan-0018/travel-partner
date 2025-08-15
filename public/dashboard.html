@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div style="max-width: 1200px; margin: 20px auto; padding: 0 20px;">
+
+    <!-- Greeting -->
+    <div class="greeting">
+      <h2>Hey, <span id="usernameGreeting">Loading...</span>!</h2>
+      <h3 class="dashboard-title">Dashboard</h3>
+    </div>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-container">
+
+      <!-- Left: Feature Cards -->
+      <div class="main-content">
+        <div class="card host" onclick="window.location.href='host.html'">
+          <h3>Host a Trip</h3>
+          <p>Plan your dream journey & let others hop aboard! 🚐✈️</p>
+        </div>
+
+        <div class="card join" onclick="window.location.href='join.html'">
+          <h3>Join a Trip</h3>
+          <p>Discover epic adventures & meet awesome travel buddies! 🌍🤝</p>
+        </div>
+
+        <div class="card requests" onclick="window.location.href='requests.html'">
+          <h3>My Trip Requests</h3>
+          <p>See who’s eager to join your adventures — captain’s choice! 🛳</p>
+        </div>
+      </div>
+
+      <!-- Right: Profile Panel -->
+      <div class="profile-panel">
+      
+        <h3 id="pName">Loading...</h3>
+        <p><b>Email:</b> <span id="pEmail"></span></p>
+        <p><b>Mobile:</b> <span id="pMobile"></span></p>
+        <a href="profile.html" class="edit-btn">Edit My Profile</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Get profile data and update greeting + panel
+    fetch('/profile')
+      .then(res => res.json())
+      .then(data => {
+        const username = data.username || 'Traveller';
+        document.getElementById('usernameGreeting').textContent = username;
+        document.getElementById('pName').textContent = username;
+        document.getElementById('pEmail').textContent = data.email || 'Not set';
+        document.getElementById('pMobile').textContent = data.mobile || 'N/A';
+
+        // If profile image exists from backend, update the picture
+        if (data.profileImage) {
+          document.querySelector('.profile-pic').src = `/uploads/${data.profileImage}`;
+        }
+      })
+      .catch(err => {
+        document.getElementById('usernameGreeting').textContent = 'Traveller';
+        console.error('Error fetching profile:', err);
+      });
+  </script>
+
+</body>
+</html>
