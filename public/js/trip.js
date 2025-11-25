@@ -1,10 +1,12 @@
+const BASE_URL = 'https://travel-partner-backend-5d9c.onrender.com';
+
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
     const tripDetailEl = document.getElementById('tripDetail');
 
     // Load Trip Detail & Participants
-    fetch(`/trip/${id}`)
+    fetch(`${BASE_URL}/trip/${id}`)
         .then(res => res.json())
         .then(trip => {
             const startDate = new Date(trip.start_date);
@@ -42,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        fetch(`/trip/${id}/request-join`, {
+        fetch(`${BASE_URL}/trip/${id}/request-join`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message })

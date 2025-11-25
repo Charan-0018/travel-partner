@@ -1,6 +1,8 @@
+const BASE_URL = 'https://travel-partner-backend-5d9c.onrender.com';
+
 document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname === '/join.html') {
-        fetch('/trips')
+        fetch(`${BASE_URL}/trips`)
             .then(res => res.json())
             .then(trips => {
                 const list = document.getElementById('trip-list');

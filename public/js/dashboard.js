@@ -1,8 +1,15 @@
 // dashboard.js
+const BASE_URL = 'https://travel-partner-backend-5d9c.onrender.com';
+
+//fetch(`${BASE_URL}/profile`)
+//fetch(`${BASE_URL}/my-trips`)
+//fetch(`${BASE_URL}/travel-buddies`)
+//fetch(`${BASE_URL}/trips-by-host/${hostId}`)
+
 
 // Load user profile data and show greeting, profile panel:
 function loadProfile() {
-  fetch('/profile')
+  fetch(`${BASE_URL}/profile`)
     .then(res => {
       if (!res.ok) throw new Error('Not logged in');
       return res.json();
@@ -25,7 +32,7 @@ function showMyTrips() {
   section.style.display = 'block';
   document.getElementById('travelBuddiesSection').style.display = 'none';
 
-  fetch('/my-trips')
+  fetch(`${BASE_URL}/my-trips`)
     .then(res => res.json())
     .then(data => {
       const hosted = data.hosted || [];
@@ -71,7 +78,7 @@ function showTravelBuddies() {
 
   listDiv.textContent = 'Loading...';
 
-  fetch('/travel-buddies')
+  fetch(`${BASE_URL}/travel-buddies`)
     .then(res => res.json())
     .then(buddies => {
       if (!buddies.length) {
@@ -102,7 +109,7 @@ function showTravelBuddies() {
 
           tripsContainer.innerHTML = 'Loading trips...';
 
-          fetch(`/trips-by-host/${hostId}`)
+          fetch(`${BASE_URL}/trips-by-host/${hostId}`)
             .then(res => res.json())
             .then(trips => {
               if (trips.length === 0) {

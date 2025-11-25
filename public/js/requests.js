@@ -1,5 +1,8 @@
+const BASE_URL = 'https://travel-partner-backend-5d9c.onrender.com';
+
+
 function loadRequests() {
-    fetch('/my-trip-requests')
+    fetch(`${BASE_URL}/my-trip-requests`)
         .then(res => res.json())
         .then(requests => {
             const container = document.getElementById('requestsContainer');
@@ -28,7 +31,7 @@ function loadRequests() {
 }
 
 function handleAction(id, action) {
-    fetch(`/trip-requests/${id}/${action}`, { method: 'POST' })
+    fetch(`${BASE_URL}/trip-requests/${id}/${action}`, { method: 'POST' })
         .then(res => res.text())
         .then(msg => {
             alert(msg);
@@ -39,3 +42,4 @@ function handleAction(id, action) {
 
 // Load requests on page load
 document.addEventListener('DOMContentLoaded', loadRequests);
+

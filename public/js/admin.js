@@ -1,5 +1,7 @@
+const BASE_URL = 'https://travel-partner-backend-5d9c.onrender.com';
+
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('/trips')
+    fetch(`${BASE_URL}/trips`)
         .then(res => res.json())
         .then(trips => {
             const container = document.getElementById('admin-data');

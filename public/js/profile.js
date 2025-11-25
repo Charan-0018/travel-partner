@@ -1,6 +1,8 @@
+const BASE_URL = 'https://travel-partner-backend-5d9c.onrender.com';
+
 document.addEventListener('DOMContentLoaded', () => {
   // Load current profile data
-  fetch('/profile')
+  fetch(`${BASE_URL}/profile`)
     .then(res => {
       if (!res.ok) throw new Error('Not logged in');
       return res.json();
@@ -52,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       travel_styles: [...document.getElementById('travelStyles').selectedOptions].map(opt => opt.value),
       interests: [...document.getElementById('interests').selectedOptions].map(opt => opt.value)
     };
-    fetch('/profile', {
+    fetch(`${BASE_URL}/profile`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(updatedData)

@@ -1,6 +1,9 @@
+const BASE_URL = 'https://travel-partner-backend-5d9c.onrender.com';
+
+
 document.addEventListener('DOMContentLoaded', () => {
     // Load current profile data
-    fetch('/profile')
+    fetch(`${BASE_URL}/profile`)
         .then(res => {
             if (!res.ok) throw new Error('Not logged in');
             return res.json();
@@ -26,8 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
             language: document.getElementById('language').value.trim(),
             dob: document.getElementById('dob').value
         };
-
-        fetch('/profile', {
+        fetch(`${BASE_URL}/profile`,{
+        //fetch('/profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(profileData)
@@ -41,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadTrips = () => {
         const location = document.getElementById('location').value.trim();
         const budget = document.getElementById('budget').value.trim();
-        let query = '/trips?';
+       // let query = '/trips?';
+       let query = `${BASE_URL}/trips?`;
         if (location) query += `location=${encodeURIComponent(location)}&`;
         if (budget) query += `budget=${encodeURIComponent(budget)}&`;
         fetch(query)
