@@ -1,9 +1,44 @@
 /* ===== GLOBAL STYLES ===== */
 body {
   font-family: 'Poppins', Arial, sans-serif;
-  background: #f3f9fb;
+
+    background-image: url('/images/img2.jpg');
   margin: 0;
   color: #333;
+}
+
+.auth-wel{
+  font-style: oblique;
+  font-family:'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+  font-size: 3rem;
+  font-weight: 900;
+  color:aqua;
+  text-shadow: 2px 2px 10px rgba(15, 15, 15, 0.8);
+  user-select: none;
+  letter-spacing: 0.08em;
+}
+
+
+
+
+.auth-welcome {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #F9E795; /* Coral / warm accent */
+  margin: 40px 0 30px 0;
+  text-shadow: 2px 2px 10px black;
+  user-select: none;
+  letter-spacing: 0.08em;
+}
+
+
+body.dashboard {
+  background-image: url('/images/traveller1.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  min-height: 100vh;
 }
 
 
@@ -14,18 +49,36 @@ body {
 }
 
 .greeting h2 {
-  font-weight: 700;
-  font-size: 2rem;
+  font-family: 'Montserrat', 'Poppins', cursive, Arial, sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #db1641;
   margin: 0;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 12px #ffb4a2,
+    0 0 20px #ffd6cc,
+    2px 2px 8px rgba(255,111,97,0.19);
+  border-radius: 12px;
+  padding: 10px 30px;
+  display:block;
 }
 
+
 .dashboard-title {
-  font-weight: 800;
-  font-size: 1.5rem;
-  margin-top: 5px;
-  font-size: 25px;
-  margin-right: 1000px;
-  color: #555;
+  font-family: 'Montserrat', 'Poppins', Arial, sans-serif; /* modern designer font */
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  margin: 20px 0 10px 40px;      /* stylish spacing: top, right, bottom, left */
+  color: #0077b6;                /* ocean blue for lively look */
+  text-shadow: 2px 2px 16px rgba(0, 119, 182, 0.12); /* soft shadow for depth */
+  line-height: 1.1;
+  background: linear-gradient(90deg, #afdceb 50%, #caf0f8 100%); /* subtle blue highlight */
+  display: inline-block;
+  padding: 6px 34px 6px 18px;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(71,167,212,.12);
 }
 
 /* Dashboard cards - base styling */
@@ -43,15 +96,20 @@ body {
 
 /* Specific colors for each card */
 .card.host {
-  background: linear-gradient(135deg, #ff6f61, #ff9770); /* Coral → Peach */
+   background: rgba(255, 255, 255, 0.5); 
+  
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1); 
 }
 .card.join {
-  background: linear-gradient(135deg, #0077b6, #0096c7); /* Blue shades */
+  background: linear-gradient(135deg, #0077b6, #0096c7); 
+  color: #fff;
+}
+.card.join h3, .card.join p {
+  color: #fff;
 }
 .card.requests {
-  background: linear-gradient(135deg, #06d6a0, #1b9aaa); /* Aqua → Teal */
+  background: linear-gradient(135deg, #06d6a0, #1b9aaa);
 }
-
 
 /* Hover effect */
 .card:hover {
@@ -79,7 +137,6 @@ a:hover {
 }
 
 form {
-  background: white;
   padding: 15px;
   border-radius: 8px;
   margin: 10px 0;
@@ -118,14 +175,7 @@ button:hover {
 }
 
 /* ===== AUTH PAGES ===== */
-.auth-body {
-  background: linear-gradient(rgba(0,119,182,0.4), rgba(0,119,182,0.4)),
-              url('../images/travel-bg.jpg') no-repeat center center/cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
+
 
 .auth-container {
   display: flex;
@@ -134,15 +184,7 @@ button:hover {
   justify-content: center;
 }
 
-.auth-card {
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 30px;
-  border-radius: 12px;
-  width: 320px;
-  box-shadow: 0 4px 20px rgba(255, 165, 0, 0.4);
-  text-align: center;
-  transition: transform 0.2s ease;
-}
+
 .auth-card:hover {
   transform: translateY(-5px);
 }
@@ -172,8 +214,26 @@ button:hover {
   flex-wrap: wrap;
 }
 
-.card {
-  background: white;
+.tcard {
+  background: rgba(121, 204, 179, 0.7);
+  flex: 1;
+  min-width: 220px;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(245, 242, 242, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tcard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 18px rgba(125, 219, 1, 0.15);
+}
+.tcard h3 {
+  margin-bottom: 10px;
+}
+.fcard {
+  background: rgba(241, 231, 82, 0.7);
   flex: 1;
   min-width: 220px;
   padding: 20px;
@@ -183,40 +243,68 @@ button:hover {
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.card:hover {
+.fcard:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 18px rgba(0,0,0,0.15);
 }
-.card h3 {
+.fcard h3 {
   margin-bottom: 10px;
 }
 
 /* ===== PROFILE PANEL ===== */
 .profile-panel {
   flex: 1;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  background: linear-gradient(180deg, #ffffff, #ebf8ff); /* Soft white to very light blue */
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
   text-align: center;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
+
 .profile-pic {
-  width: 100px;
-  height:100px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   object-fit: cover;
+  border: 4px solid #0077b6; /* Ocean blue border */
+  margin: 0 auto 20px auto;
+  background-color: #fff;
 }
+
+.profile-panel h3 {
+  color: #0077b6;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.profile-panel p {
+  font-size: 1rem;
+  margin: 8px 0;
+  color: #333;
+}
+
+.profile-panel p b {
+  color: #ff6f61; /* Coral highlight for labels */
+}
+
 .edit-btn {
   display: inline-block;
-  padding: 8px 14px;
-  background: #0096c7;
+  padding: 12px 16px;
+  background: #ff6f61;
   color: white;
   border-radius: 6px;
   text-decoration: none;
-  margin-top: 10px;
+  font-weight: 500;
+  margin-top: 20px;
+  transition: background 0.3s ease;
 }
+
 .edit-btn:hover {
-  background: #0077b6;
+  background: #ff8b75;
 }
 
 /* ===== HOST A TRIP FORM ===== */
@@ -361,70 +449,339 @@ button:hover {
   border-radius: 6px;
   margin-bottom: 15px;
 }
-/* Change text color specifically for Join a Trip card */
-.card.join {
-  color: #fff; /* White text for best contrast */
-}
 
-.card.join h3 {
-  color: #fff; /* Ensures heading is also white */
-}
 
-.card.join p {
-  color: #f0f8ff; /* Very light bluish-white for softer body text */
-}
-/* ===== PROFILE PANEL ===== */
+
+/* Profile Panel */
 .profile-panel {
-  flex: 1;
-  background: linear-gradient(180deg, #ffffff, #ebf8ff); /* Soft white to very light blue */
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-  text-align: center;
-  align-self: stretch;
+  background: linear-gradient(135deg, #fff4e0, #ffd4a3); /* warm soft orange */
+  padding: 35px 30px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(255, 160, 50, 0.2);
+  color: #4a3f35;
+}
+
+/* Profile Panel heading color */
+.profile-panel h3 {
+  color: #b3541e; /* deeper orange/brown */
+}
+
+/* Edit Button (keep coral consistent) */
+.edit-btn {
+  background: #ff6f61;
+  color: white;
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+.edit-btn:hover {
+  background: #ff856f;
+}
+
+
+.auth-body {
+  background: linear-gradient(
+      rgba(0,119,182,0.1), 
+      rgba(0,119,182,0.1)
+    ),
+    url('../images/t3.jpg') no-repeat center center/cover;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.auth-card {
+  background-color: rgba(255, 255, 255, 0.5); /* semi-transparent white */
+  padding: 30px;
+  border-radius: 20px;
+  width: 320px;
+  border-color: #333;
+  box-shadow: 0 4px 20px rgba(235, 172, 12, 0.4);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+.auth-card input,
+.auth-card select,
+.auth-card textarea {
+  background-color: rgba(255, 255, 255, 0.6); /* semi-transparent white */
+  border: 1.5px solid #0077b6;
+  border-radius: 6px;
+  color: #333;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
-.profile-pic {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #0077b6; /* Ocean blue border */
-  margin: 0 auto 20px auto;
-  background-color: #fff;
+/* Travel Buddies parent section: soft turquoise gradient */
+#travelBuddiesSection {
+  background: linear-gradient(135deg, #41ead4 50%, #f2f2f2 100%);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(65,234,212,0.08);
+  padding: 32px 24px;
+  margin: 25px 0;
+}
+
+/* My Trips parent section: light peach-pink gradient */
+#myTripsSection {
+  background: linear-gradient(135deg, #ffdeeb 30%, #fcd5ce 90%);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(255,222,235,0.11);
+  padding: 32px 24px;
+  margin: 25px 0;
+}
+
+/*
+  Generic card for each list item in these panels:
+  More transparent, visually “floating” over panel colors
+*/
+.trip-card,
+.buddy-card,
+.tcard {
+  background: rgba(255, 255, 255, 0.55);       /* translucent white */
+  border-radius: 15px;
+  box-shadow: 0 4px 18px rgba(65, 234, 212, 0.09), 0 2px 8px rgba(0,0,0,0.12);
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  transition: background 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+/* When a specific travel buddy (card) is clicked, show extra color inside: */
+.buddy-card.active, .tcard.active {
+  background: linear-gradient(135deg, rgba(248,210,124,0.65) 60%, rgba(65,234,212,0.50) 100%);
+  box-shadow: 0 8px 32px rgba(248,210,124,0.11), 0 8px 32px rgba(65,234,212,0.12);
+}
+
+/* Heading inside the cards */
+.trip-card h4, .buddy-card h4, .tcard h3 {
+  color: #843b62;  /* travel purple */
+  font-family: 'Montserrat', 'Poppins', Arial, sans-serif;
+  font-size: 1.32rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+
+/* If your buddy cards have trip detail panels inside */
+.buddy-trips {
+  /* On child click, color tint panel */
+  background: rgba(67, 97, 238, 0.19);       /* transparent blue tint */
+  border-radius: 10px;
+  padding: 12px 10px;
+  margin-top: 12px;
+  box-shadow: 0 2px 12px rgba(67,97,238,0.05);
+}
+
+.buddy-card.active .buddy-trips {
+  background: rgba(255,184,174, 0.23);       /* soft coral tint when active */
+}
+
+/* Button for joining/viewing trips */
+.trip-card button, .buddy-card button, .view-btn {
+  background: linear-gradient(90deg, #41ead4 0%, #ff6f61 100%);
+  color: #fff;
+  border-radius: 8px;
+  padding: 7px 22px;
+  font-weight: 700;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(65,234,212,0.15);
+  transition: background 0.2s;
+}
+.trip-card button:hover, .buddy-card button:hover, .view-btn:hover {
+  background: linear-gradient(90deg, #ff6f61 0%, #41ead4 100%);
+}
+
+/* Add a click handler: In JS, add/remove 'active' class to .buddy-card or .tcard on click */
+.host-form {
+  max-width: 500px;
+  margin: 36px auto;
+  background: linear-gradient(120deg, rgba(65,234,212,0.45) 0%, rgba(255, 184, 174, 0.38) 100%);
+  padding: 26px 30px;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(255, 184, 174, 0.13), 0 4px 20px rgba(65,234,212,0.11);
+  backdrop-filter: blur(2px); /* for extra glassy look */
+}
+
+/* Make input fields also semi-transparent, matching card style */
+.host-form input,
+.host-form select,
+.host-form textarea {
+  background: rgba(255,255,255,0.68);
+  border-radius: 8px;
+  border: 1.5px solid #41ead4;
+  color: #333;
+  font-size: 1.1rem;
+  margin-bottom: 18px;
+  padding: 12px;
+  transition: background 0.3s;
+}
+
+.host-form input:focus,
+.host-form select:focus,
+.host-form textarea:focus {
+  background: rgba(255,255,255,0.86);
+  border-color: #ff6f61;
+  box-shadow: 0 0 8px #ff6f61;
+  outline: none;
+}
+
+.host-form button {
+  background: linear-gradient(90deg, #ff6f61 0%, #41ead4 100%);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 0;
+  font-size: 1.2rem;
+  margin-top: 8px;
+  box-shadow: 0 2px 12px rgba(255, 111, 97, 0.15);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.host-form button:hover {
+  background: linear-gradient(90deg, #41ead4 0%, #ff6f61 100%);
+}
+
+
+.profile-panel {
+  background: linear-gradient(100deg, rgba(255,237,197,0.60) 36%, rgba(174,221,227,0.48) 100%);
+  padding: 36px 32px;
+  border-radius: 20px;
+  box-shadow: 0 6px 28px rgba(255,184,174, 0.13), 0 3px 12px rgba(65,234,212,0.12);
+  backdrop-filter: blur(2.5px); /* glassy effect */
+  color: #42364d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .profile-panel h3 {
-  color: #0077b6;
-  font-size: 1.5rem;
-  margin-bottom: 15px;
+  font-family: 'Montserrat', 'Poppins', Arial, sans-serif;
+  font-size: 2.0rem;
+  color: #f67e7d;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 12px rgba(246,126,125,0.14);
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid #41ead4;
+  box-shadow: 0 2px 16px rgba(65,234,212,0.17);
+  margin-bottom: 18px;
+  background-color: rgba(255,255,255,0.7);
+  object-fit: cover;
 }
 
 .profile-panel p {
-  font-size: 1rem;
-  margin: 8px 0;
-  color: #333;
+  font-size: 1.13rem;
+  color: #42364d;
+  margin: 10px 0;
+  background: rgba(255,255,255,0.28);  /* further semi-transparent bg for info blocks */
+  padding: 8px 14px;
+  border-radius: 8px;
 }
 
 .profile-panel p b {
-  color: #ff6f61; /* Coral highlight for labels */
+  color: #ff6f61;
 }
 
+/* Edit Button style for profile */
 .edit-btn {
-  display: inline-block;
-  padding: 12px 16px;
-  background: #ff6f61;
+  background: linear-gradient(90deg, #41ead4 0%, #ff6f61 100%);
   color: white;
-  border-radius: 6px;
+  border-radius: 10px;
+  padding: 15px 24px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-decoration: none;
-  font-weight: 500;
-  margin-top: 20px;
-  transition: background 0.3s ease;
+  font-size: 1.1rem;
+  margin-top: 18px;
+  box-shadow: 0 2px 8px rgba(41,234,212,0.12);
+  transition: background 0.3s;
+}
+.edit-btn:hover {
+  background: linear-gradient(90deg, #ff6f61 0%, #41ead4 100%);
+}
+.profile-panel {
+  background: linear-gradient(100deg, rgba(255,237,197,0.55) 30%, rgba(174,221,227,0.48) 100%);
+  padding: 36px 32px;
+  border-radius: 22px;
+  box-shadow: 0 0 0 6px rgba(65,234,212, 0.18), 0 8px 36px rgba(255, 184, 174, 0.14);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  transition: box-shadow 0.3s, border-color 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.edit-btn:hover {
-  background: #ff8b75;
+/* Glowing "active/selected" state when clicked */
+.profile-panel.active {
+  border-image: linear-gradient(90deg, #41ead4 15%, #ffb997 46%, #f67e7d 78%, #843b62 100%) 1;
+  box-shadow: 0 0 0 10px rgba(246,126,125,0.15), 0 8px 38px rgba(65,234,212,0.18);
+  background: linear-gradient(120deg, rgba(255,237,197,0.60) 10%, rgba(246,126,125,0.19) 100%);
 }
+
+/* Inner info blocks: keep glassy effect */
+.profile-panel p {
+  font-size: 1.13rem;
+  color: #42364d;
+  margin: 10px 0;
+  background: rgba(255,255,255,0.23);  
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 2px solid rgba(65,234,212,0.26);
+}
+
+/* Profile pic: thicker colored circle border */
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 5px solid #41ead4;
+  box-shadow: 0 4px 22px rgba(41,234,212,0.14);
+  margin-bottom: 18px;
+  background-color: rgba(255,255,255,0.7);
+  object-fit: cover;
+}
+
+.profile-panel h3 {
+  font-family: 'Montserrat', 'Poppins', Arial, sans-serif;
+  font-size: 2rem;
+  color: #843b62;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 14px rgba(246,126,125,0.13);
+}
+
+/* Button styling as before */
+.edit-btn {
+  background: linear-gradient(90deg, #ffb997 0%, #843b62 100%);
+  color: white;
+  border-radius: 10px;
+  padding: 15px 24px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-size: 1.1rem;
+  margin-top: 18px;
+  box-shadow: 0 2px 8px rgba(41,234,212,0.13);
+  transition: background 0.3s;
+}
+.edit-btn:hover {
+  background: linear-gradient(90deg, #843b62 0%, #ffb997 100%);
+}
+

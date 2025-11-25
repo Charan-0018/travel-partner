@@ -6,77 +6,50 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
   <div style="max-width: 500px; margin: 40px auto;">
-    
-      <form id="profileForm">
-        <label>Username</label>
-        <input type="text" id="username" name="username" required>
-        
-        <label>Email</label>
-        <input type="email" id="email" name="email" required>
+    <form id="profileForm">
+      <label>Username</label>
+      <input type="text" id="username" name="username" required>
+      <label>Email</label>
+      <input type="email" id="email" name="email" required>
+      <label>Mobile Number</label>
+      <input type="tel" id="mobile" name="mobile" placeholder="Enter mobile number">
+      <label>Gender</label>
+      <select id="gender" name="gender">
+        <option value="">Select Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+      <label>Preferred Language</label>
+      <input type="text" id="language" name="language" placeholder="Preferred language">
+      <label>Date of Birth</label>
+      <input type="date" id="dob" name="dob">
 
-        <label>Mobile Number</label>
-        <input type="tel" id="mobile" name="mobile" placeholder="Enter mobile number">
+      <!-- New fields for travel styles and interests -->
+      <label>Travel Styles</label>
+      <select id="travelStyles" name="travel_styles" multiple size="6">
+        <option value="Adventure">Adventure</option>
+        <option value="Nature">Nature</option>
+        <option value="Luxury">Luxury</option>
+        <option value="Relaxation">Relaxation</option>
+        <option value="Culture">Culture</option>
+        <option value="Food">Food</option>
+      </select>
 
-        <label>Gender</label>
-        <select id="gender" name="gender">
-          <option value="">Select Gender</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
-        </select>
+      <label>Interests</label>
+      <select id="interests" name="interests" multiple size="6">
+        <option value="Hiking">Hiking</option>
+        <option value="Beach">Beach</option>
+        <option value="Museums">Museums</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Yoga">Yoga</option>
+        <option value="Foodie">Foodie</option>
+      </select>
 
-        <label>Preferred Language</label>
-        <input type="text" id="language" name="language" placeholder="Preferred language">
-
-        <label>Date of Birth</label>
-        <input type="date" id="dob" name="dob">
-
-        <button type="submit" class="edit-btn" style="width: 100%; margin-top: 15px;">Update Profile</button>
-      </form>
-    </div>
+      <button type="submit" class="edit-btn" style="width: 100%; margin-top: 15px;">Update Profile</button>
+    </form>
   </div>
-
-  <script>
-    // Load current profile data
-    fetch('/profile')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('username').value = data.username || '';
-        document.getElementById('email').value = data.email || '';
-        document.getElementById('mobile').value = data.mobile || '';
-        document.getElementById('gender').value = data.gender || '';
-        document.getElementById('language').value = data.language || '';
-        if (data.dob) document.getElementById('dob').value = data.dob.split('T')[0];
-      });
-
-    // Handle form submission
-    document.getElementById('profileForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const updatedData = {
-        username: document.getElementById('username').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        mobile: document.getElementById('mobile').value.trim(),
-        gender: document.getElementById('gender').value,
-        language: document.getElementById('language').value.trim(),
-        dob: document.getElementById('dob').value
-      };
-      fetch('/profile', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(updatedData)
-      })
-      .then(res => res.text())
-      .then(msg => {
-        alert(msg);
-      })
-      .catch(err => {
-        alert('Error updating profile');
-        console.error(err);
-      });
-    });
-  </script>
-
+  <script src="js/profile.js"></script>
 </body>
 </html>

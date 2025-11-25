@@ -15,7 +15,9 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('user','admin') DEFAULT 'user',
     language VARCHAR(20),
     gender VARCHAR(10),
-    dob DATE
+    dob DATE,
+    travel_styles TEXT,  -- JSON string of travel styles for AI matching
+    interests TEXT       -- JSON string of interests for AI matching
 );
 
 -- =========================================
@@ -37,13 +39,13 @@ CREATE TABLE IF NOT EXISTS trips (
 );
 
 -- =========================================
--- 3. TRIP_REQUESTS TABLE (with host_id)
+-- 3. TRIP_REQUESTS TABLE
 -- =========================================
 CREATE TABLE IF NOT EXISTS trip_requests (
     id INT PRIMARY KEY AUTO_INCREMENT,
     trip_id INT NOT NULL,
-    requester_id INT NOT NULL, -- user sending request
-    host_id INT NOT NULL,      -- host of the trip
+    requester_id INT NOT NULL,
+    host_id INT NOT NULL,
     status ENUM('pending','accepted','rejected') DEFAULT 'pending',
     message TEXT,
     requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -53,7 +55,19 @@ CREATE TABLE IF NOT EXISTS trip_requests (
 );
 
 -- =========================================
--- 4. CHAT_ROOMS TABLE
+-- 4. TRIP_PARTICIPANTS TABLE
+-- =========================================
+CREATE TABLE IF NOT EXISTS trip_participants (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    trip_id INT NOT NULL,
+    user_id INT NOT NULL,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- =========================================
+-- 5. CHAT_ROOMS TABLE
 -- =========================================
 CREATE TABLE IF NOT EXISTS chat_rooms (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -67,7 +81,7 @@ CREATE TABLE IF NOT EXISTS chat_rooms (
 );
 
 -- =========================================
--- 5. MESSAGES TABLE (linked to chat_rooms)
+-- 6. MESSAGES TABLE
 -- =========================================
 CREATE TABLE IF NOT EXISTS messages (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -80,7 +94,7 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 
 -- =========================================
--- 6. REVIEWS TABLE
+-- 7. REVIEWS TABLE
 -- =========================================
 CREATE TABLE IF NOT EXISTS reviews (
     id INT PRIMARY KEY AUTO_INCREMENT,

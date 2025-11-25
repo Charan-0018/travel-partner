@@ -6,74 +6,16 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
   <div class="container" style="max-width: 900px; margin: auto; padding: 20px;">
-    <div id="tripDetail" class="trip-detail">
-      <!-- Trip details will load here -->
-    </div>
-
-    <!-- Join Request Form -->
+    <div id="tripDetail" class="trip-detail"></div>
     <div class="join-form">
       <h3>Request to Join</h3>
       <form id="joinForm">
-        <textarea name="message" placeholder="Write a message to the host..." required></textarea>
+        <textarea name="message" required></textarea>
         <button type="submit">Send Request</button>
       </form>
     </div>
   </div>
-
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const tripId = params.get('id');
-
-    // Load trip details
-    fetch(`/trip/${tripId}`)
-      .then(res => res.json())
-      .then(trip => {
-        const startDate = new Date(trip.start_date);
-        const endDate = new Date(trip.end_date);
-        const startFormatted = `${String(startDate.getDate()).padStart(2,'0')}-${String(startDate.getMonth()+1).padStart(2,'0')}-${startDate.getFullYear()}`;
-        const endFormatted = `${String(endDate.getDate()).padStart(2,'0')}-${String(endDate.getMonth()+1).padStart(2,'0')}-${endDate.getFullYear()}`;
-
-        const participantsHTML = trip.participants.map(p => {
-          if (p.mobile) {
-            return `<li class="host">${p.username} - Mobile: ${p.mobile}</li>`;
-          }
-          return `<li>${p.username}</li>`;
-        }).join('');
-
-        document.getElementById('tripDetail').innerHTML = `
-          <h2>${trip.destination} (${trip.vehicle})</h2>
-          <p class="dates">Dates: ${startFormatted} to ${endFormatted}</p>
-          <p class="budget">Budget: ₹${trip.budget}</p>
-          <p>${trip.description || ''}</p>
-          <h4>Participants</h4>
-          <ul class="participants-list">${participantsHTML}</ul>
-        `;
-      })
-      .catch(err => {
-        console.error('Error loading trip:', err);
-      });
-
-    // Join request submit
-    document.getElementById('joinForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const message = e.target.message.value.trim();
-      fetch(`/trip/${tripId}/request-join`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message })
-      })
-      .then(res => {
-        if (res.ok) {
-          alert('Join Request Sent!');
-          e.target.reset();
-        } else {
-          alert('Error sending request.');
-        }
-      });
-    });
-  </script>
-
+  <script src="js/trip.js"></script>
 </body>
 </html>

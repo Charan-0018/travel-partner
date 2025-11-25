@@ -9,13 +9,15 @@ const http = require('http');
 const { Server } = require('socket.io');
 require('dotenv').config();
 
+
 const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
 
-// Multer config
+
+// Multer setup for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) =>
@@ -23,10 +25,11 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
 
-// DB connect
+
 const db = mysql.createConnection({
   host: 'localhost',
   user: process.env.DB_USER,
@@ -35,13 +38,15 @@ const db = mysql.createConnection({
 });
 db.connect(err => { if (err) throw err; console.log('Database connected.'); });
 
-/* ====================== AUTH ====================== */
+
+/* ===== AUTH ===== */
 app.post('/signup', async (req, res) => {
-  const { username, password, email, mobile, gender, language, dob } = req.body;
+  const { username, password, email, mobile, gender, language, dob, travel_styles, interests } = req.body;
   const hashed = await bcrypt.hash(password, 10);
   db.query(
-    'INSERT INTO users (username, email, password, mobile, gender, language, dob) VALUES (?,?,?,?,?,?,?)',
-    [username, email, hashed, mobile || null, gender || null, language || null, dob || null],
+    `INSERT INTO users (username, email, password, mobile, gender, language, dob, travel_styles, interests) 
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [username, email, hashed, mobile || null, gender || null, language || null, dob || null, JSON.stringify(travel_styles || []), JSON.stringify(interests || [])],
     err => {
       if (err) return res.send(err);
       res.redirect('/login.html');
@@ -51,7 +56,7 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
-  db.query('SELECT * FROM users WHERE username=?', [username], async (err, results) => {
+  db.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
     if (err) throw err;
     if (results.length && await bcrypt.compare(password, results[0].password)) {
       req.session.user = results[0];
@@ -62,19 +67,19 @@ app.post('/login', (req, res) => {
   });
 });
 
-app.get('/me', (req, res) => {
-  if (!req.session.user) return res.json(null);
-  res.json({ id: req.session.user.id, username: req.session.user.username });
-});
 
-/* ====================== PROFILE ====================== */
 app.get('/profile', (req, res) => {
   if (!req.session.user) return res.status(401).send('Not logged in');
   db.query(
-    'SELECT username, email, mobile, gender, language, dob FROM users WHERE id = ?',
+    `SELECT username, email, mobile, gender, language, dob, travel_styles, interests 
+     FROM users WHERE id = ?`,
     [req.session.user.id],
     (err, results) => {
       if (err) throw err;
+      if(results[0]) {
+        results[0].travel_styles = JSON.parse(results[0].travel_styles || '[]');
+        results[0].interests = JSON.parse(results[0].interests || '[]');
+      }
       res.json(results[0]);
     }
   );
@@ -82,12 +87,10 @@ app.get('/profile', (req, res) => {
 
 app.post('/profile', (req, res) => {
   if (!req.session.user) return res.status(401).send('Not logged in');
-  const { username, email, mobile, gender, language, dob } = req.body;
+  const { username, email, mobile, gender, language, dob, travel_styles, interests } = req.body;
   db.query(
-    `UPDATE users 
-     SET username=?, email=?, mobile=?, gender=?, language=?, dob=? 
-     WHERE id=?`,
-    [username, email, mobile, gender, language, dob, req.session.user.id],
+    `UPDATE users SET username=?, email=?, mobile=?, gender=?, language=?, dob=?, travel_styles=?, interests=? WHERE id=?`,
+    [username, email, mobile, gender, language, dob, JSON.stringify(travel_styles || []), JSON.stringify(interests || []), req.session.user.id],
     err => {
       if (err) throw err;
       res.send('Profile updated successfully');
@@ -95,20 +98,82 @@ app.post('/profile', (req, res) => {
   );
 });
 
-/* ====================== HOST A TRIP ====================== */
+
+/* ===== HOST A TRIP ===== */
 app.post('/host', upload.single('image'), (req, res) => {
   if (!req.session.user) return res.redirect('/login.html');
   const { destination, vehicle, budget, start_date, end_date, preferences, description } = req.body;
   const image = req.file ? req.file.filename : null;
   db.query(
     `INSERT INTO trips (host_id, destination, vehicle, budget, start_date, end_date, preferences, description, image) 
-     VALUES (?,?,?,?,?,?,?,?,?)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [req.session.user.id, destination, vehicle, budget, start_date, end_date, preferences, description, image],
     err => { if (err) throw err; res.redirect('/dashboard.html'); }
   );
 });
 
-/* ====================== AI-LIKE SEARCH ====================== */
+
+/* ===== AI TRAVEL COMPANION MATCHING ===== */
+app.get('/travel-buddies', (req, res) => {
+  if (!req.session.user) return res.status(401).send('Not logged in');
+  db.query('SELECT id, travel_styles, interests FROM users WHERE id = ?', [req.session.user.id], (err, userRes) => {
+    if (err) throw err;
+    if (!userRes.length) return res.status(404).send('User not found');
+
+    const currentUser = userRes[0];
+    const currentStyles = JSON.parse(currentUser.travel_styles || '[]');
+    const currentInterests = JSON.parse(currentUser.interests || '[]');
+
+    db.query('SELECT id, username, travel_styles, interests FROM users WHERE id != ?', [req.session.user.id], (err2, users) => {
+      if (err2) throw err2;
+
+      const similarityScores = users.map(u => {
+        let score = 0;
+        const uStyles = JSON.parse(u.travel_styles || '[]');
+        const uInterests = JSON.parse(u.interests || '[]');
+
+        score += currentStyles.filter(s => uStyles.includes(s)).length;
+        score += currentInterests.filter(i => uInterests.includes(i)).length;
+
+        return { ...u, score };
+      });
+
+      similarityScores.sort((a, b) => b.score - a.score);
+      const topMatches = similarityScores.filter(u => u.score > 0).slice(0,20);
+      res.json(topMatches);
+    });
+  });
+});
+
+
+/* ===== MY TRIPS ===== */
+app.get('/my-trips', (req, res) => {
+  if (!req.session.user) return res.status(401).send('Not logged in');
+  const userId = req.session.user.id;
+  const hostedTripsQuery = `
+    SELECT trips.*, 'host' AS role, users.username
+    FROM trips
+    JOIN users ON users.id = trips.host_id
+    WHERE trips.host_id = ?
+  `;
+  const joinedTripsQuery = `
+    SELECT trips.*, 'participant' AS role, users.username 
+    FROM trip_participants 
+    JOIN trips ON trip_participants.trip_id = trips.id
+    JOIN users ON users.id = trips.host_id
+    WHERE trip_participants.user_id = ? AND trips.host_id != ?
+  `;
+  db.query(hostedTripsQuery, [userId], (err, hostedTrips) => {
+    if (err) throw err;
+    db.query(joinedTripsQuery, [userId, userId], (err2, joinedTrips) => {
+      if (err2) throw err2;
+      res.json({ hosted: hostedTrips, joined: joinedTrips });
+    });
+  });
+});
+
+
+/* TRIPS SEARCH */
 app.get('/trips', (req, res) => {
   let sql = `SELECT trips.*, users.username 
              FROM trips 
@@ -134,7 +199,8 @@ app.get('/trips', (req, res) => {
   });
 });
 
-/* ====================== TRIP DETAILS ====================== */
+
+/* TRIP DETAILS */
 app.get('/trip/:id', (req, res) => {
   db.query(`
     SELECT trips.*, users.username AS host_username, users.mobile AS host_mobile
@@ -166,7 +232,8 @@ app.get('/trip/:id', (req, res) => {
   );
 });
 
-/* ====================== JOIN REQUESTS ====================== */
+
+/* JOIN REQUESTS */
 app.post('/trip/:id/request-join', (req, res) => {
   if (!req.session.user) return res.redirect('/login.html');
   const { message } = req.body;
@@ -182,6 +249,7 @@ app.post('/trip/:id/request-join', (req, res) => {
   });
 });
 
+
 app.get('/my-trip-requests', (req, res) => {
   if (!req.session.user) return res.redirect('/login.html');
   db.query(
@@ -194,6 +262,7 @@ app.get('/my-trip-requests', (req, res) => {
     (err, results) => { if (err) throw err; res.json(results); }
   );
 });
+
 
 app.post('/trip-requests/:id/:action', (req, res) => {
   const { id, action } = req.params;
@@ -227,7 +296,8 @@ app.post('/trip-requests/:id/:action', (req, res) => {
   });
 });
 
-/* ====================== CHAT ====================== */
+
+/* CHAT */
 app.get('/chat-rooms', (req, res) => {
   if (!req.session.user) return res.status(401).send('Not logged in');
   const userId = req.session.user.id;
@@ -299,7 +369,8 @@ app.post('/chat/:chatId/message', (req, res) => {
   );
 });
 
-/* ====================== USERS ====================== */
+
+/* USERS */
 app.get('/users', (req, res) => {
   if (!req.session.user) return res.status(401).send('Not logged in');
   db.query('SELECT id, username FROM users WHERE id != ?', [req.session.user.id], (err, users) => {
@@ -307,9 +378,11 @@ app.get('/users', (req, res) => {
   });
 });
 
+
 app.get('/', (req, res) => res.redirect('/login.html'));
 
-/* ====================== SOCKET.IO ====================== */
+
+/* SOCKET.IO */
 io.on('connection', socket => {
   console.log('User connected:', socket.id);
   socket.on('joinRoom', roomId => {
@@ -319,4 +392,120 @@ io.on('connection', socket => {
   socket.on('disconnect', () => console.log('User disconnected:', socket.id));
 });
 
-server.listen(3000, () => console.log('Server running on http://localhost:3000'));
+app.post('/trip-requests/:id/:action', (req, res) => {
+  const { id, action } = req.params; // 'accepted' or 'rejected'
+  if (!['accepted', 'rejected'].includes(action)) return res.status(400).send('Invalid action');
+
+  // Use 'action' as status
+  const status = action;
+
+  db.query('SELECT * FROM trip_requests WHERE id = ?', [id], (err, requests) => {
+    if (err) return res.status(500).send('Database error');
+    if (requests.length === 0) return res.status(404).send('Request not found');
+
+    const request = requests[0];
+
+    db.query('SELECT trip_name FROM trips WHERE id = ?', [request.trip_id], (err, trips) => {
+      if (err) return res.status(500).send('Database error');
+      if (trips.length === 0) return res.status(404).send('Trip not found');
+
+      const tripName = trips[0].trip_name;
+
+      // Update request status
+      db.query('UPDATE trip_requests SET status = ? WHERE id = ?', [status, id], err => {
+        if (err) return res.status(500).send('Error updating request status');
+
+        // Prepare notification message
+        let notifyMsg = status === 'accepted' 
+          ? `Your request to join the trip "${tripName}" was approved.` 
+          : `Your request to join the trip "${tripName}" was rejected.`;
+
+        // Insert notification for requester
+        const insertNotifSql = 'INSERT INTO notifications (user_id, message) VALUES (?, ?)';
+        db.query(insertNotifSql, [request.requester_id, notifyMsg], err => {
+          if (err) return res.status(500).send('Error inserting notification');
+
+          if (status === 'accepted') {
+            // Also add user as participant and create chat room
+            db.query(
+              'INSERT INTO trip_participants (trip_id, user_id) VALUES (?, ?)',
+              [request.trip_id, request.requester_id],
+              err => {
+                if (err) return res.status(500).send('Error adding participant');
+
+                db.query(
+                  'INSERT INTO chat_rooms (trip_id, user1_id, user2_id) VALUES (?, ?, ?)',
+                  [request.trip_id, request.host_id, request.requester_id],
+                  err => {
+                    if (err) return res.status(500).send('Error creating chat room');
+                    res.send('Request approved, participant added, notification sent, and chat room created');
+                  }
+                );
+              }
+            );
+          } else {
+            // If rejected, just send the notification response
+            res.send(`Request rejected and notification sent.`);
+          }
+        });
+      });
+    });
+  });
+});
+
+// Existing imports and setup omitted for brevity
+
+// ... your existing routes and middleware
+
+// Returns all matching travel buddies (already included in your code)
+app.get('/travel-buddies', (req, res) => {
+  if (!req.session.user) return res.status(401).send('Not logged in');
+  db.query('SELECT id, travel_styles, interests FROM users WHERE id = ?', [req.session.user.id], (err, userRes) => {
+    if (err) throw err;
+    if (!userRes.length) return res.status(404).send('User not found');
+
+    const currentUser = userRes[0];
+    const currentStyles = JSON.parse(currentUser.travel_styles || '[]');
+    const currentInterests = JSON.parse(currentUser.interests || '[]');
+
+    db.query('SELECT id, username, travel_styles, interests FROM users WHERE id != ?', [req.session.user.id], (err2, users) => {
+      if (err2) throw err2;
+
+      const similarityScores = users.map(u => {
+        let score = 0;
+        const uStyles = JSON.parse(u.travel_styles || '[]');
+        const uInterests = JSON.parse(u.interests || '[]');
+
+        score += currentStyles.filter(s => uStyles.includes(s)).length;
+        score += currentInterests.filter(i => uInterests.includes(i)).length;
+
+        return { ...u, score };
+      });
+
+      similarityScores.sort((a, b) => b.score - a.score);
+      const topMatches = similarityScores.filter(u => u.score > 0);  // returns all matches, no slice()
+      res.json(topMatches);
+    });
+  });
+});
+
+// New route to fetch trips by a specific host user:
+app.get('/trips-by-host/:hostId', (req, res) => {
+  const hostId = parseInt(req.params.hostId, 10);
+  if (isNaN(hostId)) return res.status(400).send('Invalid host ID');
+
+  db.query(
+    `SELECT * FROM trips WHERE host_id = ? ORDER BY created_at DESC`,
+    [hostId],
+    (err, results) => {
+      if (err) return res.status(500).send('Database error');
+      res.json(results);
+    }
+  );
+});
+
+// ... your existing app.listen or server.listen calls
+
+const port = process.env.PORT || 3000;
+server.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+
