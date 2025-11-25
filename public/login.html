@@ -7,13 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body class="auth-body">
-  <div class="auth-wel" >Welcome to Travel Partner</div>
-  <div class="auth-welcome" >Travel Smarter, Travel Together</div>
+  <div class="auth-wel">Welcome to Travel Partner</div>
+  <div class="auth-welcome">Travel Smarter, Travel Together</div>
 
   <div class="auth-container">
     <div class="auth-card">
       <h2>Login</h2>
-      <form action="/login" method="POST">
+      <form id="loginForm">
         <input type="text" name="username" required placeholder="user name" />
         <input type="password" name="password" required placeholder="password"/>
         <button type="submit">Login</button>
@@ -21,13 +21,60 @@
     </div>
     <div class="auth-card">
       <h2>Signup</h2>
-      <form action="/signup" method="POST">
-        <input  type="text" name="username" required placeholder="user name" />
+      <form id="signupForm">
+        <input type="text" name="username" required placeholder="user name" />
         <input type="email" name="email" required placeholder="email"/>
         <input type="password" name="password" required placeholder="password"/>
         <button type="submit">Signup</button>
       </form>
     </div>
   </div>
+
+  <!-- Add JavaScript here -->
+  <script>
+    const BASE_URL = 'https://travel-partner-backend-5d9c.onrender.com';
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = this.username.value.trim();
+      const password = this.password.value;
+
+      fetch(`${BASE_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => {
+        if (res.ok) {
+          window.location.href = 'dashboard.html';
+        } else {
+          alert('Invalid login. Try again.');
+        }
+      })
+      .catch(() => alert('Error logging in.'));
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = this.username.value.trim();
+      const email = this.email.value.trim();
+      const password = this.password.value;
+
+      fetch(`${BASE_URL}/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      })
+      .then(res => {
+        if (res.ok) {
+          alert('Signup successful! Please login.');
+          document.getElementById('signupForm').reset();
+        } else {
+          alert('Signup failed.');
+        }
+      })
+      .catch(() => alert('Error signing up.'));
+    });
+  </script>
 </body>
 </html>
