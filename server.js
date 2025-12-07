@@ -34,6 +34,93 @@ const pool = new Pool({
   port: process.env.PG_PORT || 5432
 });
 
+// Auto-create tables on startup (FREE method)
+const createTables = async () => {
+  const tables = [
+    `CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      username VARCHAR(255) UNIQUE NOT NULL,
+      email VARCHAR(255),
+      password VARCHAR(255) NOT NULL,
+      mobile VARCHAR(255),
+      gender VARCHAR(50),
+      language VARCHAR(100),
+      dob DATE,
+      travel_styles TEXT,
+      interests TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    
+    `CREATE TABLE IF NOT EXISTS trips (
+      id SERIAL PRIMARY KEY,
+      host_id INTEGER REFERENCES users(id),
+      destination VARCHAR(255) NOT NULL,
+      vehicle VARCHAR(100),
+      budget DECIMAL,
+      start_date DATE,
+      end_date DATE,
+      preferences TEXT,
+      description TEXT,
+      image VARCHAR(255),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    
+    `CREATE TABLE IF NOT EXISTS trip_requests (
+      id SERIAL PRIMARY KEY,
+      trip_id INTEGER REFERENCES trips(id),
+      requester_id INTEGER REFERENCES users(id),
+      host_id INTEGER REFERENCES users(id),
+      message TEXT,
+      status VARCHAR(20) DEFAULT 'pending',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    
+    `CREATE TABLE IF NOT EXISTS trip_participants (
+      id SERIAL PRIMARY KEY,
+      trip_id INTEGER REFERENCES trips(id),
+      user_id INTEGER REFERENCES users(id),
+      joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    
+    `CREATE TABLE IF NOT EXISTS chat_rooms (
+      id SERIAL PRIMARY KEY,
+      trip_id INTEGER REFERENCES trips(id),
+      user1_id INTEGER REFERENCES users(id),
+      user2_id INTEGER REFERENCES users(id),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    
+    `CREATE TABLE IF NOT EXISTS messages (
+      id SERIAL PRIMARY KEY,
+      chat_id INTEGER REFERENCES chat_rooms(id),
+      sender_id INTEGER REFERENCES users(id),
+      message_text TEXT NOT NULL,
+      sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    
+    `CREATE TABLE IF NOT EXISTS notifications (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES users(id),
+      message TEXT NOT NULL,
+      seen BOOLEAN DEFAULT FALSE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`
+  ];
+
+  try {
+    for (const table of tables) {
+      await pool.query(table);
+    }
+    console.log('✅ All tables created successfully!');
+  } catch (err) {
+    console.error('❌ Table creation error:', err);
+  }
+};
+
+// Run on startup
+createTables();
+
+
 /* ===== AUTH ===== */
 app.post('/signup', async (req, res) => {
   const { username, password, email, mobile, gender, language, dob, travel_styles, interests } = req.body;
